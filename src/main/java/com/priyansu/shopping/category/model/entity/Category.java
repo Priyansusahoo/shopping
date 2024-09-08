@@ -42,11 +42,15 @@ public class Category implements Serializable {
     @Size(min = 1, max = 255)
     private String description;
 
-    @Lob
+    /*@Lob
     @Column(name = "image", nullable = false, columnDefinition = "MEDIUMBLOB")
     @Basic(fetch = FetchType.LAZY)
     @ToString.Exclude
-    private byte[] image;
+    private byte[] image;*/
+
+    @Column(name = "image_url", length = 1500)
+    @NotBlank
+    private String imageUrl;
 
     @CreationTimestamp
     @Column(updatable = false)
