@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper=false)
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Category implements Serializable {
 
     @Serial
