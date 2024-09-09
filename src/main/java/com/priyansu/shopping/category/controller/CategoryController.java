@@ -3,7 +3,6 @@ package com.priyansu.shopping.category.controller;
 import com.google.gson.Gson;
 import com.priyansu.shopping.category.model.dto.CategoryDto;
 import com.priyansu.shopping.category.model.entity.Category;
-import com.priyansu.shopping.category.service.CategoryService;
 import com.priyansu.shopping.category.service.CategoryServiceInterface;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/category")
