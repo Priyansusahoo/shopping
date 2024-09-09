@@ -1,5 +1,6 @@
 package com.priyansu.shopping.category.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -36,28 +37,35 @@ public class Category implements Serializable {
     @Column(name = "category_name")
     @Size(min = 1, max = 100)
     @NotBlank
+    @JsonProperty("categoryName")
     private String categoryName;
 
     @Column(name = "description", columnDefinition = "TEXT")
     @NotBlank
     @Size(min = 1, max = 255)
+    @JsonProperty("description")
     private String description;
 
     /*@Lob
     @Column(name = "image", nullable = false, columnDefinition = "MEDIUMBLOB")
     @Basic(fetch = FetchType.LAZY)
     @ToString.Exclude
+    @JsonProperty("image")
     private byte[] image;*/
 
-    @Column(name = "image_url", length = 1500)
-    @NotBlank
+    @Column(name = "image_url", length = 2500)
+    @Size(min = 1, max = 2500)
+    @NotBlank(message = "Image URL must not be blank")
+    @JsonProperty("imageUrl")
     private String imageUrl;
 
     @CreationTimestamp
     @Column(updatable = false)
+    @JsonProperty("createdAt")
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
+    @JsonProperty("updatedAt")
     private LocalDateTime updatedAt;
 
 }
