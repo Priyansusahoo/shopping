@@ -10,9 +10,7 @@ public class GsonConfig {
     @Bean
     public Gson gson() {
         return new GsonBuilder().setPrettyPrinting().create(); // customization option available
-        /*
-         * return new Gson();
-         * Default Gson instance
-         */
+
+         /*return new Gson(); // Default Gson instance*/
     }
 }
