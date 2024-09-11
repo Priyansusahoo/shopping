@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/category")
@@ -71,21 +70,13 @@ public class CategoryController {
     public ResponseEntity<String> updateCategory(@PathVariable("id") Long id, @RequestBody CategoryDto categoryDto) {
         try {
             // copy values from categoryDto of *CategoryDto* type to category of *Category* type
-            Category category = Category.builder()
-                    .categoryName(categoryDto.getCategoryName())
-                    .description(categoryDto.getDescription())
-                    .imageUrl(categoryDto.getImageUrl())
-                    .build();
+            Category category = modelMapper.map(categoryDto, Category.class);
 
             Category updatedCategory = categoryServiceInterface.updateCategory(id, category);
 
             // copy values from updatedCategory of *Category* type to reponseCategoryDto of *CategoryDto* type
-            CategoryDto reponseCategoryDto = CategoryDto.builder()
-                    .id(updatedCategory.getId())
-                    .categoryName(updatedCategory.getCategoryName())
-                    .description(updatedCategory.getDescription())
-                    .imageUrl(updatedCategory.getImageUrl())
-                    .build();
+            CategoryDto reponseCategoryDto = modelMapper.map(updatedCategory, CategoryDto.class);
+
             return ResponseEntity.ok(gson.toJson(reponseCategoryDto));
         } catch (RuntimeException e) {
             log.error("***Failed to update category, source : CategoryController.java, updateCategory()***");
