@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/category")
@@ -29,35 +30,40 @@ public class CategoryController {
 
     @PostMapping("/createCategory")
     public ResponseEntity<String> createCategory(@RequestBody CategoryDto categoryDto) {
-        // copy values from category to categoryEntity -2nd method
-        Category categoryEntity = modelMapper.map(categoryDto, Category.class);
+        try {
+            // copy values from category to categoryEntity -2nd method
+            Category categoryEntity = modelMapper.map(categoryDto, Category.class);
 
-        boolean response = categoryServiceInterface.createCategory(categoryEntity);
-        if (response) {
-            return ResponseEntity.ok("Category created successfully");
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to create category");
+            boolean response = categoryServiceInterface.createCategory(categoryEntity);
+            if (response) {
+                return ResponseEntity.ok("Category created successfully");
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to create category");
+            }
+        } catch (Exception e) {
+            log.error("***Failed to create category, source : CategoryController.java, createCategory()***");
+            throw new RuntimeException(e);
         }
     }
 
     @GetMapping("/getAllCategoryList")
     public ResponseEntity<String> getAllCategory() {
-        List<Category> CatList = categoryServiceInterface.getAllCategory();
-        if (CatList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Category found!");
-        } else {
-            // convert List<Category> to List<CategoryDto>
-            List<CategoryDto> categoryDtoList = CatList.stream()
-                    .map(category -> new CategoryDto(
-                            category.getId(),
-                            category.getCategoryName(),
-                            category.getDescription(),
-                            category.getImageUrl()
-                    ))
-                    .toList();
+        try {
+            List<Category> categoryList = categoryServiceInterface.getAllCategory();
+            if (categoryList.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Category found!");
+            } else {
+                // convert List<Category> to List<CategoryDto>
+                List<CategoryDto> categoryDtoList = categoryList.stream()
+                        .map(category -> modelMapper.map(category, CategoryDto.class))
+                        .toList();
 
-            String categoryDtoListJson = gson.toJson(categoryDtoList);
-            return ResponseEntity.ok(categoryDtoListJson);
+                String categoryDtoListJson = gson.toJson(categoryDtoList);
+                return ResponseEntity.ok(categoryDtoListJson);
+            }
+        } catch (Exception e) {
+            log.error("***Failed to fetch all category list, source : CategoryController.java, getAllCategory()***");
+            throw new RuntimeException(e);
         }
     }
 
@@ -82,7 +88,7 @@ public class CategoryController {
                     .build();
             return ResponseEntity.ok(gson.toJson(reponseCategoryDto));
         } catch (RuntimeException e) {
-            log.error("Failed to update category, source : CategoryController.java, updateCategory()");
+            log.error("***Failed to update category, source : CategoryController.java, updateCategory()***");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Category with id = " + id + " not found");
         }
     }
