@@ -1,10 +1,16 @@
 package com.priyansu.shopping.category.service;
 
+import com.priyansu.shopping.category.exception.CategoryNotFoundException;
+import com.priyansu.shopping.category.exception.CategoryServiceException;
 import com.priyansu.shopping.category.model.entity.Category;
 import com.priyansu.shopping.category.model.jparepository.CategoryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.lang.RuntimeException;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,48 +19,45 @@ import java.util.Optional;
 @Slf4j
 public class CategoryService implements CategoryServiceInterface{
 
+    private final CategoryRepository categoryRepository;
+
     @Autowired
-    private CategoryRepository categoryRepository;
+    public CategoryService(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
 
     @Override
-    public boolean createCategory(Category category) {
+    @Transactional
+    public Category createCategory(Category category) {
         try {
-            Category category1 = categoryRepository.save(category);
-            return category1.getId() != null;
-        } catch (Exception e) {
-            log.error("***Error while executing : 'CategoryService.java', 'createCategory(Category category)' method***");
-            throw new RuntimeException("Error creating category", e);
+            return categoryRepository.save(category);
+        } catch (DataAccessException e) {
+            log.error("Database error while creating category", e);
+            throw new CategoryServiceException("Error creating category", e);
         }
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Category> getAllCategory() {
-        try {
             return categoryRepository.findAll();
-        } catch (Exception e) {
-            log.error("***Error while executing : 'getAllCategory()' in 'CategoryService'***");
-            throw new RuntimeException(e);
-        }
     }
 
     @Override
+    @Transactional
     public Category updateCategory(Long id, Category category) {
         try {
-            Optional<Category> category1 = categoryRepository.findById(id);
+            Category existingCategory  = categoryRepository.findById(id)
+                    .orElseThrow(() -> new CategoryNotFoundException("Category with id " + id + " not found"));
 
-            if (category1.isPresent()) {
-                Category category2 = category1.get();
-                category2.setCategoryName(category.getCategoryName());
-                category2.setImageUrl(category.getImageUrl());
-                category2.setDescription(category.getDescription());
+            existingCategory.setCategoryName(category.getCategoryName());
+            existingCategory.setImageUrl(category.getImageUrl());
+            existingCategory.setDescription(category.getDescription());
 
-                return categoryRepository.save(category2);
-            } else {
-                log.error("***Error while executing 'CategoryService.java', 'updateCategory(Long id, Category category)' method***");
-                throw new RuntimeException("Category with id = " + category.getId() + "not found");
-            }
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e);
+            return categoryRepository.save(existingCategory);
+        } catch (Exception e) {
+            log.error("Error updating category with id {} in updateCategory()", id, e);
+            throw new CategoryNotFoundException("Category with id " + id + " not found");
         }
     }
 }
