@@ -5,6 +5,7 @@ import com.priyansu.shopping.category.model.dto.CategoryDto;
 import com.priyansu.shopping.category.model.entity.Category;
 import com.priyansu.shopping.category.service.CategoryServiceInterface;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,13 +24,13 @@ public class CategoryController {
     @Autowired
     private Gson gson;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @PostMapping("/createCategory")
-    public ResponseEntity<String> createCategory(@RequestBody CategoryDto category) {
-        // copy values from category to categoryEntity
-        Category categoryEntity = Category.builder()
-                .categoryName(category.getCategoryName())
-                .description(category.getDescription())
-                .imageUrl(category.getImageUrl()).build();
+    public ResponseEntity<String> createCategory(@RequestBody CategoryDto categoryDto) {
+        // copy values from category to categoryEntity -2nd method
+        Category categoryEntity = modelMapper.map(categoryDto, Category.class);
 
         boolean response = categoryServiceInterface.createCategory(categoryEntity);
         if (response) {
