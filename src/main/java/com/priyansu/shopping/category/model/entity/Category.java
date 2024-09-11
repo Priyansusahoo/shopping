@@ -34,15 +34,15 @@ public class Category implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "category_name")
-    @Size(min = 1, max = 100)
-    @NotBlank
+    @Column(name = "category_name", nullable = false, length = 100)
+    @Size(min = 1, max = 100, message = "Category name must not exceed 100 characters")
+    @NotBlank(message = "Category name must not be blank")
     @JsonProperty("categoryName")
     private String categoryName;
 
-    @Column(name = "description", columnDefinition = "TEXT")
-    @NotBlank
-    @Size(min = 1, max = 255)
+    @Column(name = "description", columnDefinition = "TEXT", nullable = false)
+    @NotBlank(message = "Description must not be blank")
+    @Size(min = 1, max = 255, message = "Description must not exceed 255 characters")
     @JsonProperty("description")
     private String description;
 
@@ -53,18 +53,19 @@ public class Category implements Serializable {
     @JsonProperty("image")
     private byte[] image;*/
 
-    @Column(name = "image_url", length = 2500)
-    @Size(min = 1, max = 2500)
+    @Column(name = "image_url", length = 2500, nullable = false)
+    @Size(min = 1, max = 2500, message = "Image URL must not exceed 2500 characters")
     @NotBlank(message = "Image URL must not be blank")
     @JsonProperty("imageUrl")
     private String imageUrl;
 
     @CreationTimestamp
-    @Column(updatable = false)
+    @Column(name = "created_at", updatable = false, nullable = false)
     @JsonProperty("createdAt")
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
     @JsonProperty("updatedAt")
     private LocalDateTime updatedAt;
 
