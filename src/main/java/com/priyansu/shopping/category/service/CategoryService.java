@@ -22,7 +22,7 @@ public class CategoryService implements CategoryServiceInterface{
             Category category1 = categoryRepository.save(category);
             return category1.getId() != null;
         } catch (Exception e) {
-            log.error("Error in CategoryService.java, createCategory(Category category) method");
+            log.error("***Error while executing : 'CategoryService.java', 'createCategory(Category category)' method***");
             throw new RuntimeException("Error creating category", e);
         }
     }
@@ -32,6 +32,7 @@ public class CategoryService implements CategoryServiceInterface{
         try {
             return categoryRepository.findAll();
         } catch (Exception e) {
+            log.error("***Error while executing : 'getAllCategory()' in 'CategoryService'***");
             throw new RuntimeException(e);
         }
     }
@@ -49,7 +50,7 @@ public class CategoryService implements CategoryServiceInterface{
 
                 return categoryRepository.save(category2);
             } else {
-                log.error("Error in -> CategoryService.java, updateCategory(Long id, Category category) method");
+                log.error("***Error while executing 'CategoryService.java', 'updateCategory(Long id, Category category)' method***");
                 throw new RuntimeException("Category with id = " + category.getId() + "not found");
             }
         } catch (RuntimeException e) {
