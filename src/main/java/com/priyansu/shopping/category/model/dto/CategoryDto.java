@@ -4,7 +4,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-
+/**
+ * DTO class for Category.class
+ * Includes fields from Category.class : id, categoryName, description, imageUrl.
+ * <p>
+ * Created by: Priyansu
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,13 +20,13 @@ public class CategoryDto {
     @JsonProperty("id")
     private Long id;
 
-    @Size(min = 1, max = 100)
+    @Size(min = 1, max = 100, message = "Category name must be between 1 and 100 characters")
     @NotBlank(message = "categoryName must not be blank")
     @JsonProperty("categoryName")
     private String categoryName;
 
-    @NotBlank
-    @Size(min = 1, max = 255)
+    @NotBlank(message = "Description must not be blank")
+    @Size(min = 1, max = 255, message = "Description must be between 1 and 255 characters")
     @JsonProperty("description")
     private String description;
 
