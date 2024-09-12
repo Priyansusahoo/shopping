@@ -40,7 +40,7 @@ public class CategoryController {
             @ApiResponse(responseCode = "200", description = "Category created successfully"),
             @ApiResponse(responseCode = "404", description = "Failed to create category")
     })
-    @PostMapping("/createCategory")
+    @RequestMapping(value = "/createCategory", method = RequestMethod.POST)
     public ResponseEntity<CategoryDto> createCategory(@RequestBody CategoryDto categoryDto) {
         try {
             // copy values from category to categoryEntity -2nd method
@@ -61,7 +61,7 @@ public class CategoryController {
             @ApiResponse(responseCode = "200", description = "Successfully fetched the categories"),
             @ApiResponse(responseCode = "204", description = "No categories found")
     })
-    @GetMapping("/getAllCategoryList")
+    @RequestMapping(value = "/getAllCategoryList", method = RequestMethod.GET)
     public ResponseEntity<List<CategoryDto>> getAllCategory() {
         try {
             List<Category> categoryList = categoryServiceInterface.getAllCategory();
@@ -83,7 +83,7 @@ public class CategoryController {
             @ApiResponse(responseCode = "200", description = "Category updated successfully"),
             @ApiResponse(responseCode = "404", description = "Category not found")
     })
-    @PutMapping("/updateCategory/{id}")
+    @RequestMapping(value = "/updateCategory/{id}", method = RequestMethod.PUT)
     public ResponseEntity<CategoryDto> updateCategory(@PathVariable("id") Long id,
                                                       @Valid @RequestBody CategoryDto categoryDto) {
         try {
