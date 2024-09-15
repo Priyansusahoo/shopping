@@ -10,12 +10,9 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.RuntimeException;
-
 import java.util.List;
-import java.util.Optional;
 
-@Service
+@Service("categoryService")
 @Slf4j
 public class CategoryService implements CategoryServiceInterface{
 
@@ -49,10 +46,11 @@ public class CategoryService implements CategoryServiceInterface{
         try {
             Category existingCategory  = categoryRepository.findById(id)
                     .orElseThrow(() -> new CategoryNotFoundException("Category with id " + id + " not found"));
-
+            // Mapping ---START---
             existingCategory.setCategoryName(category.getCategoryName());
             existingCategory.setImageUrl(category.getImageUrl());
             existingCategory.setDescription(category.getDescription());
+            // Mapping ---END---
 
             return categoryRepository.save(existingCategory);
         } catch (Exception e) {

@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+
+import java.io.Serializable;
+
 /**
  * DTO class for Category.class
  * Includes fields from Category.class : id, categoryName, description, imageUrl.
@@ -15,7 +18,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode(callSuper = false)
-public class CategoryDto {
+public class CategoryDto implements Serializable {
 
     @JsonProperty("id")
     private Long id;
